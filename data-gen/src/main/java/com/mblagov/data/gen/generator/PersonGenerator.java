@@ -1,7 +1,6 @@
-package com.mblagov.mongo.client.generator;
+package com.mblagov.data.gen.generator;
 
-import com.mblagov.mongo.client.model.Person;
-import org.bson.codecs.jsr310.LocalDateCodec;
+import com.mblagov.data.gen.model.Person;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class PersonGenerator {
         return people;
     }
 
-    public Person getRandomPersonWithId(Long id) {
+    public Person getRandomPersonWithId(String id) {
         Person randomPerson = getRandomPerson();
         randomPerson.setId(id);
         return randomPerson;

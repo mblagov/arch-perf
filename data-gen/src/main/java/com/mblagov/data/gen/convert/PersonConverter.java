@@ -1,6 +1,6 @@
-package com.mblagov.mongo.client.convert;
+package com.mblagov.data.gen.convert;
 
-import com.mblagov.mongo.client.model.Person;
+import com.mblagov.data.gen.model.Person;
 import org.bson.Document;
 
 public class PersonConverter {

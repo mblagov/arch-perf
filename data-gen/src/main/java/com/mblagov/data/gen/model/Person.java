@@ -1,10 +1,10 @@
-package com.mblagov.mongo.client.model;
+package com.mblagov.data.gen.model;
 
 import java.time.LocalDate;
 
 public class Person {
 
-    private Long id;
+    private String id;
     private String firstName;
     private String lastName;
     private String middleName;
@@ -21,7 +21,7 @@ public class Person {
         this.comment = comment;
     }
 
-    public Person(Long id, String firstName, String lastName, String middleName, LocalDate dateOfBirth, String address, String comment) {
+    public Person(String id, String firstName, String lastName, String middleName, LocalDate dateOfBirth, String address, String comment) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -31,11 +31,11 @@ public class Person {
         this.comment = comment;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

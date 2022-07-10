@@ -1,7 +1,7 @@
-package com.mblagov.mongo.client;
+package com.mblagov.data.gen;
 
-import com.mblagov.mongo.client.convert.PersonConverter;
-import com.mblagov.mongo.client.generator.PersonGenerator;
+import com.mblagov.data.gen.generator.PersonGenerator;
+import com.mblagov.data.gen.convert.PersonConverter;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
