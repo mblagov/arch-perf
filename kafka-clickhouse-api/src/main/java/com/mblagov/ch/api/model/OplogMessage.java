@@ -1,6 +1,4 @@
-package com.mblagov.ch.api;
-
-import java.time.LocalDateTime;
+package com.mblagov.ch.api.model;
 
 public class OplogMessage {
 

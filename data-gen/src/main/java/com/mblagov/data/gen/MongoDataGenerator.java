@@ -18,14 +18,14 @@ public class MongoDataGenerator {
 
         String mongoClientUri = "mongodb://mblagov-students-server:27017/?replicaSet=rs0";
         String mongoDatabase = "uniform_data";
-        String mongoCollection = "person_data";
+        String mongoCollection = "person_data_5";
 
         MongoDatabase database;
         try (MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoClientUri))) {
             database = mongoClient.getDatabase(mongoDatabase);
             MongoCollection<Document> collection = database.getCollection(mongoCollection);
 
-            DataGenStrategy strategy = new PersonCUDStrategyStandalone(400, 400, 200);
+            DataGenStrategy strategy = new PersonCUDStrategyStandalone(5, 5, 2);
             List<DataWithOperation> records = strategy.records();
 
             for (DataWithOperation record : records) {

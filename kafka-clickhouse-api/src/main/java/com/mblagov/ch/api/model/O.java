@@ -1,4 +1,4 @@
-package com.mblagov.ch.api;
+package com.mblagov.ch.api.model;
 
 import java.time.LocalDateTime;
 

@@ -26,9 +26,9 @@ public class Oplog2Kafka {
 
     public static void main(String[] args) {
         String bootstrapServer = "mblagov-students-server:9092";
-        String topicName = "person_data_3";
+        String topicName = "person_data_5";
         String mongoDatabase = "uniform_data";
-        String mongoCollection = "person_data_3";
+        String mongoCollection = "person_data_5";
         String mongoClientUri = "mongodb://mblagov-students-server:27017/?replicaSet=rs0";
 
         Properties props = new Properties();

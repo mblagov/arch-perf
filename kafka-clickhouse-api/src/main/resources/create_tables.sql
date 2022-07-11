@@ -1,8 +1,8 @@
 create database if not exists  mblagov;
 
-drop table if exists mblagov.person_data_3;
+drop table if exists mblagov.person_data_5;
 
-create table if not exists  mblagov.person_data_3
+create table if not exists  mblagov.person_data_5
 (
     id                 String,
     first_name         String,
@@ -14,6 +14,7 @@ create table if not exists  mblagov.person_data_3
     ts_generated       datetime64,
     ts_wrote_to_mongo  datetime64,
     ts_read_from_kafka datetime64,
-    ts_wrote_to_ch     datetime64
+    ts_wrote_to_ch     datetime64,
+    is_deleted         boolean
 ) ENGINE = MergeTree()
       ORDER BY id;
