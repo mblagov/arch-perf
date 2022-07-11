@@ -3,13 +3,24 @@ package com.mblagov.data.gen.generator;
 import com.mblagov.data.gen.model.Person;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class PersonGenerator {
 
-    public List<Person> generateRandomPersons(int numberOfRecords) {
+    public List<Person> generateRandomPeopleWithId(int numberOfRecords) {
+        List<Person> people = new ArrayList<>();
+
+        for (int i = 0; i < numberOfRecords; i++) {
+            people.add(getRandomPersonWithId(String.valueOf(i)));
+        }
+
+        return people;
+    }
+
+    public List<Person> generateRandomPeople(int numberOfRecords) {
         List<Person> people = new ArrayList<>();
 
         for (int i = 0; i < numberOfRecords; i++) {
@@ -32,8 +43,9 @@ public class PersonGenerator {
         LocalDate dateOfBirth = random2thCenturyDate();
         String address = generateRandomString(250);
         String comment = generateRandomString(1000);
+        LocalDateTime generatedTs = LocalDateTime.now();
 
-        return new Person(firstName, lastName, middleName, dateOfBirth, address, comment);
+        return new Person(firstName, lastName, middleName, dateOfBirth, address, comment, generatedTs);
     }
 
     private LocalDate random2thCenturyDate() {
@@ -50,9 +62,7 @@ public class PersonGenerator {
         int rightLimit = 122; // letter 'z'
         Random random = new Random();
 
-        String generatedString = random.ints(leftLimit, rightLimit + 1).filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97)).limit(targetStringLength).collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
-
-        return generatedString;
+        return random.ints(leftLimit, rightLimit + 1).filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97)).limit(targetStringLength).collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
     }
 
 }
