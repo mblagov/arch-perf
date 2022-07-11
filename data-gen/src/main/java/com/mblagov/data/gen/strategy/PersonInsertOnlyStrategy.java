@@ -17,9 +17,9 @@ public class PersonInsertOnlyStrategy implements DataGenStrategy {
     public List<DataWithOperation> records() {
         PersonGenerator generator = new PersonGenerator();
 
-        return generator.generateRandomPeople(numberOfRecords)
+        return generator.generateRandomPeopleWithId(numberOfRecords)
                 .stream()
-                .map(PersonConverter::toDocument)
+                .map(PersonConverter::toDocumentWithId)
                 .map(d -> new DataWithOperation(d, MongoOperation.INSERT))
                 .toList();
     }

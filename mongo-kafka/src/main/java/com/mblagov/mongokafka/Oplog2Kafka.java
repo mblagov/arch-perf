@@ -26,9 +26,9 @@ public class Oplog2Kafka {
 
     public static void main(String[] args) {
         String bootstrapServer = "mblagov-students-server:9092";
-        String topicName = "person_data";
+        String topicName = "person_data_3";
         String mongoDatabase = "uniform_data";
-        String mongoCollection = "person_data";
+        String mongoCollection = "person_data_3";
         String mongoClientUri = "mongodb://mblagov-students-server:27017/?replicaSet=rs0";
 
         Properties props = new Properties();
@@ -39,7 +39,7 @@ public class Oplog2Kafka {
                 "org.apache.kafka.common.serialization.StringSerializer");
 
         try (MongoClient mongoClient = MongoClients.create(mongoClientUri);
-             Producer<String, String> producer = new KafkaProducer<String, String>(props)) {
+             Producer<String, String> producer = new KafkaProducer<>(props)) {
 
             BsonTimestamp lastTimeStamp = null;
             MongoDatabase localDb = mongoClient.getDatabase("local");
@@ -68,22 +68,14 @@ public class Oplog2Kafka {
                     }
 
                     JsonWriterSettings settings = JsonWriterSettings.builder().timestampConverter(
-                            new Converter<BsonTimestamp>() {
-                                @Override
-                                public void convert(BsonTimestamp value, StrictJsonWriter writer) {
-                                    long unixTimestamp = value.getValue() >> 32;
-                                    Instant timestamp = Instant.ofEpochSecond(unixTimestamp);
+                            (value, writer) -> {
+                                long unixTimestamp = value.getValue() >> 32;
+                                Instant timestamp = Instant.ofEpochSecond(unixTimestamp);
 
-                                    writer.writeNumber(String.valueOf(timestamp.toEpochMilli()));
-                                }
+                                writer.writeNumber(String.valueOf(timestamp.toEpochMilli()));
                             }
                     ).dateTimeConverter(
-                            new Converter<Long>() {
-                                @Override
-                                public void convert(Long value, StrictJsonWriter writer) {
-                                    writer.writeNumber(String.valueOf(value));
-                                }
-                            }
+                            (value, writer) -> writer.writeNumber(String.valueOf(value))
                     ).build();
                     String value = document.toJson(settings);
                     producer.send(new ProducerRecord<>(topicName, value));

@@ -3,14 +3,12 @@ package com.mblagov.ch.api;
 import com.clickhouse.jdbc.ClickHouseDataSource;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.sql.*;
 import java.time.*;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -22,7 +20,7 @@ public class Kafka2Clickhouse {
         Properties properties = new Properties();
         properties.setProperty("client_name", "Agent #1");
 
-        String sql = "insert into mblagov.person_data (" +
+        String sql = "insert into mblagov.person_data_3 (" +
                 "id, " +
                 "first_name, " +
                 "last_name, " +
@@ -37,13 +35,14 @@ public class Kafka2Clickhouse {
                 "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         String bootstrapServer = "mblagov-students-server:9092";
-        String topicName = "person_data";
+        String topicName = "person_data_3";
 
         final Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaExampleConsumer");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        props.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         ClickHouseDataSource dataSource = new ClickHouseDataSource(url, properties);
 
@@ -77,13 +76,15 @@ public class Kafka2Clickhouse {
                         stmt.setTimestamp(9, toTimestamp(message.getTs()));
                         stmt.setTimestamp(10, toTimestamp(record.timestamp()));
                         stmt.setTimestamp(11, Timestamp.valueOf(LocalDateTime.now()));
+                        stmt.addBatch();
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
+
                 });
 
-                int updatedRecords = stmt.executeUpdate();
-                System.out.printf("Updated %s records %n", updatedRecords);
+                int[] updatedRecords = stmt.executeBatch();
+                System.out.printf("Updated %s records %n", Arrays.toString(updatedRecords));
 
                 consumer.commitAsync();
             }

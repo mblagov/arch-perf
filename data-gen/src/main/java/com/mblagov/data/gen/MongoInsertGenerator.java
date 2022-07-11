@@ -17,7 +17,7 @@ public class MongoInsertGenerator {
 
         String mongoClientUri = "mongodb://mblagov-students-server:27017/?replicaSet=rs0";
         String mongoDatabase = "uniform_data";
-        String mongoCollection = "person_data";
+        String mongoCollection = "person_data_3";
 
         MongoDatabase database;
         try (MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoClientUri))) {
