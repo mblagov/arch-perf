@@ -1,34 +1,25 @@
 package com.mblagov.mongokafka;
 
 import com.mongodb.CursorType;
-import com.mongodb.MongoClientURI;
 import com.mongodb.client.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.bson.BsonTimestamp;
-import org.bson.BsonWriter;
 import org.bson.Document;
-import org.bson.codecs.Encoder;
-import org.bson.codecs.EncoderContext;
-import org.bson.internal.UnsignedLongs;
-import org.bson.json.Converter;
 import org.bson.json.JsonWriterSettings;
-import org.bson.json.StrictJsonWriter;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
 public class Oplog2Kafka {
 
     public static void main(String[] args) {
         String bootstrapServer = "mblagov-students-server:9092";
-        String topicName = "person_data_5";
+        String topicName = "person_data_6";
         String mongoDatabase = "uniform_data";
-        String mongoCollection = "person_data_5";
+        String mongoCollection = "person_data_6";
         String mongoClientUri = "mongodb://mblagov-students-server:27017/?replicaSet=rs0";
 
         Properties props = new Properties();

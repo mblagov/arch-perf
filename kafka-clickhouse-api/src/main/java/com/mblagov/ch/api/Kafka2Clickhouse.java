@@ -23,7 +23,7 @@ public class Kafka2Clickhouse {
         properties.setProperty("client_name", "Agent #1");
 
         String bootstrapServer = "mblagov-students-server:9092";
-        String topicName = "person_data_5";
+        String topicName = "person_data_6";
 
         final Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
@@ -103,7 +103,7 @@ public class Kafka2Clickhouse {
     }
 
     private static String insertStatementSql() {
-        return "insert into mblagov.person_data_5 (" +
+        return "insert into mblagov.person_data_6 (" +
                 "id, " +
                 "first_name, " +
                 "last_name, " +
@@ -120,7 +120,7 @@ public class Kafka2Clickhouse {
     }
 
     private static String updateStatementSql() {
-        return "ALTER TABLE mblagov.person_data_5 UPDATE " +
+        return "ALTER TABLE mblagov.person_data_6 UPDATE " +
                 "first_name = ?, " +
                 "last_name = ?, " +
                 "middle_name = ?, " +
@@ -136,7 +136,7 @@ public class Kafka2Clickhouse {
     }
 
     private static String deleteStatementSql() {
-        return "ALTER TABLE mblagov.person_data_5 UPDATE is_deleted = ? WHERE id = ?";
+        return "ALTER TABLE mblagov.person_data_6 UPDATE is_deleted = ? WHERE id = ?";
     }
 
     private static Date toDate(Long value) {
