@@ -5,7 +5,7 @@ import org.bson.Document;
 public class DataWithOperation {
 
     private Document data;
-    private MongoOperation operation;
+    private final MongoOperation operation;
 
     public DataWithOperation(Document data, MongoOperation operation) {
         this.data = data;
@@ -24,7 +24,4 @@ public class DataWithOperation {
         return operation;
     }
 
-    public void setOperation(MongoOperation operation) {
-        this.operation = operation;
-    }
 }

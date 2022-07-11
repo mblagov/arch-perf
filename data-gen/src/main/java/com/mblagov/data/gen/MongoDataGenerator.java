@@ -1,13 +1,13 @@
 package com.mblagov.data.gen;
 
-import com.mblagov.data.gen.generator.PersonGenerator;
 import com.mblagov.data.gen.convert.PersonConverter;
-import com.mblagov.data.gen.strategy.*;
+import com.mblagov.data.gen.strategy.DataGenStrategy;
+import com.mblagov.data.gen.strategy.DataWithOperation;
+import com.mblagov.data.gen.strategy.PersonCUDStrategyStandalone;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.bson.BsonDocument;
 import org.bson.Document;
 
 import java.util.List;
@@ -23,8 +23,6 @@ public class MongoDataGenerator {
 
             DataGenStrategy strategy = new PersonCUDStrategyStandalone(400, 400, 200);
             List<DataWithOperation> records = strategy.records();
-
-            collection.deleteMany(new BsonDocument());
 
             for (DataWithOperation record : records) {
                 switch (record.getOperation()) {

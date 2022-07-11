@@ -7,7 +7,7 @@ import java.util.List;
 
 public class PersonInsertOnlyStrategy implements DataGenStrategy {
 
-    private int numberOfRecords;
+    private final int numberOfRecords;
 
     public PersonInsertOnlyStrategy(int numberOfRecords) {
         this.numberOfRecords = numberOfRecords;

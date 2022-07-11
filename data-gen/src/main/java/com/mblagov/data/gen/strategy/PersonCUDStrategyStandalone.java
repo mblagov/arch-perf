@@ -4,17 +4,15 @@ import com.mblagov.data.gen.convert.PersonConverter;
 import com.mblagov.data.gen.generator.PersonGenerator;
 import com.mblagov.data.gen.model.Person;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class PersonCUDStrategyStandalone implements DataGenStrategy {
 
-    private int insertsCount;
-    private int updatesCount;
-    private int deletesCount;
+    private final int insertsCount;
+    private final int updatesCount;
+    private final int deletesCount;
 
     public PersonCUDStrategyStandalone(int insertsCount, int updatesCount, int deletesCount) {
         this.insertsCount = insertsCount;
@@ -62,15 +60,12 @@ public class PersonCUDStrategyStandalone implements DataGenStrategy {
                 .map(PersonConverter::toDocumentWithId)
                 .map(p -> new DataWithOperation(p, MongoOperation.DELETE));
         return Stream.concat(Stream.concat(insertsStream, updatesStream), deletesStream)
-                .sorted(new Comparator<DataWithOperation>() {
-                    @Override
-                    public int compare(DataWithOperation o1, DataWithOperation o2) {
-                        int idsComparison = PersonConverter.getId(o1.getData()).compareTo(PersonConverter.getId(o2.getData()));
-                        if (idsComparison == 0) {
-                            return o1.getOperation().ordinal() - o2.getOperation().ordinal();
-                        } else {
-                            return idsComparison;
-                        }
+                .sorted((o1, o2) -> {
+                    int idsComparison = PersonConverter.getId(o1.getData()).compareTo(PersonConverter.getId(o2.getData()));
+                    if (idsComparison == 0) {
+                        return o1.getOperation().ordinal() - o2.getOperation().ordinal();
+                    } else {
+                        return idsComparison;
                     }
                 })
                 .toList();
