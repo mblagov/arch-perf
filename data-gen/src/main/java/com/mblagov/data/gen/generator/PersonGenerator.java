@@ -50,7 +50,7 @@ public class PersonGenerator {
 
     private LocalDate random2thCenturyDate() {
         Random random = new Random();
-        int year = random.nextInt(99) + 1900;
+        int year = random.nextInt(29) + 1970;
         int month = random.nextInt(11) + 1;
         int day = random.nextInt(27) + 1;
 

@@ -12,6 +12,7 @@
         <module>mongo-kafka</module>
         <module>data-gen</module>
         <module>kafka-clickhouse-api</module>
+        <module>MongoModel</module>
     </modules>
 
     <properties>

@@ -7,8 +7,16 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.bson.BsonTimestamp;
+import org.bson.BsonWriter;
 import org.bson.Document;
+import org.bson.codecs.Encoder;
+import org.bson.codecs.EncoderContext;
+import org.bson.internal.UnsignedLongs;
+import org.bson.json.Converter;
+import org.bson.json.JsonWriterSettings;
+import org.bson.json.StrictJsonWriter;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,29 +25,28 @@ import java.util.Properties;
 public class Oplog2Kafka {
 
     public static void main(String[] args) {
+        String bootstrapServer = "mblagov-students-server:9092";
         String topicName = "person_data";
+        String mongoDatabase = "uniform_data";
+        String mongoCollection = "person_data";
+        String mongoClientUri = "mongodb://mblagov-students-server:27017/?replicaSet=rs0";
 
         Properties props = new Properties();
-        props.put("bootstrap.servers", "mblagov-students-server:9092");
+        props.put("bootstrap.servers", bootstrapServer);
         props.put("key.serializer",
                 "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer",
                 "org.apache.kafka.common.serialization.StringSerializer");
 
-        String mongoDatabaseName = "uniform_data";
-        String collectionName = "person_data";
-        try (MongoClient mongoClient = MongoClients.create("mongodb://mblagov-students-server:27017/?replicaSet=rs0");
+        try (MongoClient mongoClient = MongoClients.create(mongoClientUri);
              Producer<String, String> producer = new KafkaProducer<String, String>(props)) {
-
 
             BsonTimestamp lastTimeStamp = null;
             MongoDatabase localDb = mongoClient.getDatabase("local");
             MongoCollection<Document> oplog = localDb.getCollection("oplog.rs");
 
-            List<Document> opLogList = new ArrayList<>();
-
             Document filter = new Document();
-            filter.put("ns", mongoDatabaseName + "." + collectionName);
+            filter.put("ns", mongoDatabase + "." + mongoCollection);
             filter.put("op", new Document("$in", Arrays.asList("i", "u", "d")));
             if (lastTimeStamp != null) {
                 filter.put("ts", new Document("$gt", lastTimeStamp));
@@ -56,12 +63,31 @@ public class Oplog2Kafka {
                             .iterator()) {
                 while (cursor.hasNext()) {
                     Document document = cursor.tryNext();
-                    if (document == null) throw new RuntimeException("Next document is null");
-                    String value = document.toJson();
-                    System.out.println(value);
-                    producer.send(new ProducerRecord<>("mblagov", value));
+                    if (document == null) {
+                        throw new RuntimeException("Next document is null");
+                    }
 
-                    // TODO save last timestamp properly
+                    JsonWriterSettings settings = JsonWriterSettings.builder().timestampConverter(
+                            new Converter<BsonTimestamp>() {
+                                @Override
+                                public void convert(BsonTimestamp value, StrictJsonWriter writer) {
+                                    long unixTimestamp = value.getValue() >> 32;
+                                    Instant timestamp = Instant.ofEpochSecond(unixTimestamp);
+
+                                    writer.writeNumber(String.valueOf(timestamp.toEpochMilli()));
+                                }
+                            }
+                    ).dateTimeConverter(
+                            new Converter<Long>() {
+                                @Override
+                                public void convert(Long value, StrictJsonWriter writer) {
+                                    writer.writeNumber(String.valueOf(value));
+                                }
+                            }
+                    ).build();
+                    String value = document.toJson(settings);
+                    producer.send(new ProducerRecord<>(topicName, value));
+
                     lastTimeStamp = (BsonTimestamp) document.get("ts");
                 }
             }
