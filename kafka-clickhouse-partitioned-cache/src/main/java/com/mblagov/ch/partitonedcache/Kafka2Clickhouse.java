@@ -137,6 +137,7 @@ public class Kafka2Clickhouse {
                 "    ts_wrote_to_ch     datetime64,\n" +
                 "    is_deleted         boolean\n" +
                 ") ENGINE = MergeTree()\n" +
+                " PARTITION BY toYear(date_of_birth) \n" +
                 "      ORDER BY id;";
     }
 
