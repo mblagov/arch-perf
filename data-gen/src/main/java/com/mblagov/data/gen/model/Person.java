@@ -9,7 +9,7 @@ public class Person {
     private final String firstName;
     private final String lastName;
     private final String middleName;
-    private final LocalDate dateOfBirth;
+    private LocalDate dateOfBirth;
     private final String address;
     private final String comment;
 
@@ -67,4 +67,7 @@ public class Person {
         return generatedTs;
     }
 
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
 }

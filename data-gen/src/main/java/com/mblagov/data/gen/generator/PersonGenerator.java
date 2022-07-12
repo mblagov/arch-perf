@@ -20,6 +20,16 @@ public class PersonGenerator {
         return people;
     }
 
+    public List<Person> generateRandomPeopleWithIdDob(int numberOfRecords, LocalDate dateOfBirth) {
+        List<Person> people = new ArrayList<>();
+
+        for (int i = 0; i < numberOfRecords; i++) {
+            people.add(getRandomPersonDob(String.valueOf(i), dateOfBirth));
+        }
+
+        return people;
+    }
+
     public List<Person> generateRandomPeople(int numberOfRecords) {
         List<Person> people = new ArrayList<>();
 
@@ -46,6 +56,13 @@ public class PersonGenerator {
         LocalDateTime generatedTs = LocalDateTime.now();
 
         return new Person(firstName, lastName, middleName, dateOfBirth, address, comment, generatedTs);
+    }
+
+    public Person getRandomPersonDob(String id, LocalDate dateOfBirth) {
+        Person randomPerson = getRandomPerson();
+        randomPerson.setId(id);
+        randomPerson.setDateOfBirth(dateOfBirth);
+        return randomPerson;
     }
 
     private LocalDate random2thCenturyDate() {

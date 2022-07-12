@@ -13,6 +13,8 @@
         <module>data-gen</module>
         <module>kafka-clickhouse-api</module>
         <module>kafka-clickhouse-scd2</module>
+        <module>kafka-clickhouse-cache</module>
+        <module>kafka-clickhouse-partitioned-cache</module>
     </modules>
 
     <properties>
